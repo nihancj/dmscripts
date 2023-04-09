@@ -1,0 +1,19 @@
+#!/bin/bash
+
+programs=('dwm' 'dmenu')
+choice="$(printf "%s\n" \
+        "Blue" "Cyan" "Green" "Magenta" "Red" "White" "Yellow" "wal" \
+        "BlueX" "CyanX" "GreenX" "MagentaX" "RedX" "WhiteX" "YellowX" \
+        "1" "2" "3" |\
+        dmenu -i -l 8 -p 'Pick an accent color: ')"
+
+for program in ${programs[@]}
+do
+        src="$HOME/sources/$program/current/color-schemes"
+
+        cd $src || exit 2
+        cp color_style-$choice.h color_style-selected.h || exit 2
+        cd ..
+        doas make clean install >/dev/null 2>/dev/null || (notify-send "Compilation Error!" && exit 3)
+done
+notify-send "Accent Color: $choice"

@@ -1,0 +1,22 @@
+#! /bin/bash
+
+src="/home/user/sources"
+choice=${1:-$(ls $src/dwm*/color-schemes | cut -d'-' -f1 | dmenu -i -l 5 -p 'Select: ')}
+[ "$choice" == "cancel" ] && exit
+
+programs=('dwm' 'dmenu' 'st')
+selected="color-schemes/selected_scheme.h"
+[ "$choice" == "pywal" ] && pywal_gen.sh
+
+for program in ${programs[@]}
+do
+    cd "$src/$program"
+    cp "color-schemes/$choice-$program.h" "$selected" || echo $choice
+
+    # If selected = pywal.dwm, then delete lines containg the word "urg"
+    [ "$choice-$program.h" == "pywal-dwm.h" ] && sed -i '/urg/d' "$selected"
+    doas make clean install >/dev/null 2>/dev/null
+    #notify-send "$program"
+done
+notify-send -i "$HOME/.config/wallpaper.img" "$choice" "Color-scheme: Done!"
+exit 0

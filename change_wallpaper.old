@@ -1,0 +1,28 @@
+#! /bin/bash
+
+src="$HOME/Pictures/Wallpapers"
+declare -a paths=(
+" Anime"
+" DWT1"
+" Nature"
+" Minimal"
+" Linux"
+" Personal"
+" Gnome"
+"List all"
+)
+
+choice=$(printf '%s\n' "${paths[@]}" | dmenu -i -l 9 -p 'Open: ')
+if [ "$choice" == "List all" ]; then
+    path=$src
+elif [ "$choice" == '' ]; then
+    exit 1
+else
+    path="$src/${choice# }"
+fi
+
+
+image=$(find $path -name '*.jpg' -or -name '*.png' -not -path '*/.git' | shuf | sxiv -io)
+[[ $1 == 'theme' ]] && setbg "$image" -q && exit 0
+setbg "$image"
+

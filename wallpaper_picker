@@ -1,0 +1,20 @@
+#! /bin/sh
+
+src="$HOME/Pictures/Wallpapers"
+folders=$(ls $src | awk '{print " "$1}')
+
+
+choice=$(printf '%s\n' "$folders" "List All" | dmenu -i -l 9 -p 'Open: ')
+echo "$choice"
+if [ "$choice" = "List All" ]; then
+    path=$src
+elif [ "$choice" = '' ]; then
+    exit 1
+else
+    path="$src/${choice# }"
+fi
+
+
+image=$(find $path -name '*.jpg' -or -name '*.png' -not -path '*/.git' | shuf | sxiv -io)
+[ $1 = 'theme' ] && setbg "$image" -q && exit 0
+setbg "$image"

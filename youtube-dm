@@ -1,0 +1,4 @@
+#!/bin/sh
+
+query="$(printf '' | dmenu -p 'Search YT: ')" || exit
+ytfzf -D "$query" > /dev/null

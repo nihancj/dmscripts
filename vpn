@@ -1,0 +1,49 @@
+#! /bin/bash
+
+passwd_file="$HOME/Downloads/openvpnconfigs/passwd-file"
+
+declare -a paths=(
+"Quick Connect"
+"NETHERLANDS"
+"JAPAN"
+"USA"
+"Disconnect all"
+)
+
+disconnect(){
+    [ "$(nmcli con show --active | awk 'FNR == 2 {print $3}')" != "vpn" ] && return
+    active="$(nmcli con show --active | awk 'FNR == 2 {print $1}')"
+    nmcli con down id $active || exit 4
+}
+connect(){
+    disconnect
+    [ -z $server_id ] && exit 0
+    nmcli connection up id "$country_code-free-$server_id.protonvpn.net.udp" passwd-file "$passwd_file" || exit 3
+    notify-send "VPN Connected" "$choice-$server_id"
+}
+
+choice=$(printf '%s\n' "${paths[@]}" | dmenu -i -l 9 -p ' VPN  ')
+
+if [ "$choice" == "Quick Connect" ]; then
+#    $(quick_connect)
+    exit 0
+elif [ "$choice" == "Disconnect all" ]; then
+    disconnect
+    kill -37 $(pidof dwmblocks)
+    notify-send "VPN Disconnected" "$choice-$server_id"
+    exit 0
+elif [ "$choice" == "NETHERLANDS" ]; then
+    country_code="nl"
+elif [ "$choice" == "JAPAN" ]; then
+    country_code="jp"
+elif [ "$choice" == "USA" ]; then
+    country_code="us"
+else
+    exit 1
+fi
+
+
+files="$(nmcli connection show | grep -o "nl-free-[0-9]\+" | cut -d '-' -f 3 | sort)"
+server_id=$(printf '%s\n' "${files[@]}" | dmenu -p " Choose a server ($country_code): ")
+connect
+kill -37 $(pidof dwmblocks)

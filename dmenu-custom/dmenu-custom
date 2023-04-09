@@ -1,0 +1,22 @@
+#!/bin/sh
+
+app_list="/home/user/dmscripts/dmenu-custom/apps"
+choice=$(grep -v "#" $app_list | dmenu -i "$@")
+cmd=${choice%% *}
+arguments=${choice#* }
+[ $cmd = $arguments ] && is_arguments=false || is_arguments=true
+
+
+if [ -r "$app_list.d/$cmd.cli" ]; then
+        actual_command="$(cat "$app_list.d/$cmd.cli")"
+        $is_arguments && actual_command="$actual_command $arguments"
+        $TERMINAL -e "$actual_command"
+
+elif [ -r "$app_list.d/$cmd.run" ]; then
+        actual_command=$(cat "$app_list.d/$cmd.run")
+        $is_arguments && actual_command="$actual_command $arguments"
+        printf '%s' "$actual_command" | /bin/sh
+
+else
+        $choice | /bin/sh -s &
+fi

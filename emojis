@@ -1,0 +1,4 @@
+#!/bin/sh
+
+choice="$(cat $HOME/.local/share/emoji | dmenu -i -l 20 -fn "inconsolata:size=12")"
+printf ${choice%% *} | xclip -selection clipboard

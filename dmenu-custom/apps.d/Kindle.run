@@ -1,0 +1,1 @@
+env WINEPREFIX="/home/user/.local/share/wine" wine ~/.local/share/wine/drive_c/users/user/AppData/Roaming/Microsoft/Windows/Start\ Menu/Programs/Amazon/Amazon\ Kindle/Kindle.lnk

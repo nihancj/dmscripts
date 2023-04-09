@@ -1,0 +1,1 @@
+$BROWSER --class='WhatsApp Web' -P hidebars --new-tab "https://web.whatsapp.com"

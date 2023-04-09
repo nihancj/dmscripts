@@ -1,0 +1,4 @@
+#! /bin/sh
+
+change_wallpaper theme && change_colors pywal
+exit 0
