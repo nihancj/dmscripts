@@ -6,5 +6,5 @@ choice="$(ls -1 $src | grep -v "selected" | sed 's/-colors//g' | dmenu -l 10 -p 
 
 [ $choice = "wal" ] && pywal_gen.sh
 cp "$src/$choice-colors" "$src/selected-colors" 2>/dev/null || exit
-xrdb -merge -I$HOME "~/.local/share/Xresources/selected-colors"
+xrdb -merge -I$HOME "~/.local/share/xresources.d/selected-colors"
 notify-send "$choice" "Color Scheme Set"

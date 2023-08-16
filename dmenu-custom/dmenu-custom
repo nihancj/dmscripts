@@ -1,7 +1,7 @@
 #!/bin/sh
 
 app_list="/home/user/dmscripts/dmenu-custom/apps"
-choice=$(grep -v "#" $app_list | dmenu -i "$@")
+choice=$(grep -v "#" $app_list | $LAUNCHER -i "$@")
 cmd=${choice%% *}
 arguments=${choice#* }
 [ $cmd = $arguments ] && is_arguments=false || is_arguments=true

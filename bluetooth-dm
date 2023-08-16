@@ -1,0 +1,46 @@
+#!/bin/sh
+
+turn_off() {\
+	doas sv down bluetoothd || exit
+	notify-send "Bluetooth Turned Off" "Success"
+}
+
+connect() { \
+	doas sv check bluetoothd | grep -qw "down:" && turn_on
+	paired_devies="$(bluetoothctl devices | cut -d' ' -f 2-)"
+		# If connecting w/o a scan
+	[ "$@" ] && available_devices="$paired_devies"
+
+	choice=$(printf "$available_devices" | cut -d' ' -f 2- | $LAUNCHER -i)
+	[ -z "$choice" ] && exit 1
+	device=$(printf "$available_devices" | grep "$choice" | cut -d' ' -f 1)
+	printf "$paired_devies" | grep -q "$device" || \
+		(bluetoothctl pair $device && sleep 7)
+	bluetoothctl connect $device
+	exit
+}
+
+scan() { \
+	doas sv check bluetoothd | grep -qw "down:" && turn_on
+	tmpfile="$(mktemp /tmp/bluetooth-scan.XXXXXX)"
+	i=0
+	while [ $i -lt 1 ]; do
+		timeout 5s bluetoothctl scan on >> $tmpfile
+		available_devices=$(grep "\[.*NEW" "$tmpfile" | cut -d' ' -f 3-)
+		[ "$available_devices" ] && break
+		i=$((i+1))
+	done
+	connect
+}
+
+turn_on() { \
+	[ -f /run/tmpfiles.d/bluetoothd ] || doas ln -sf /etc/runit/sv/bluetoothd "/run/tmpfiles.d/"
+	doas sv once bluetoothd || exit 3
+	sleep 2
+	bluetoothctl power on || exit 4
+}
+
+choice=$(printf "Connect\nScan\nTurn Off" | $LAUNCHER -i -l 10 -p 'Bluetooth')
+[ "$choice" == "Connect" ] && connect "1"
+[ "$choice" == "Scan" ] && scan
+[ "$choice" == "Turn Off" ] && turn_off

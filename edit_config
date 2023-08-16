@@ -20,7 +20,7 @@ declare -a options=(
 # Piping the above array into dmenu
 # We use "printf '%s\n'" to format the array one item to a line.
 if [ -z "$1" ]; then
-        choice=$(printf '%s\n' "${options[@]}" | dmenu -i -l 15 -p 'Exit? ')
+        choice=$(printf '%s\n' "${options[@]}" | $LAUNCHER -i -l 15 -p 'Exit? ')
 elif [ -n "$1" ]; then
         arg="$(printf '%s' "$1" | cut -d'.' -f2)"  # eliminate '.' from the beginnig if used
         choice=$(printf '%s\n' "${options[@]}" | grep -i "^ $arg")
@@ -34,6 +34,6 @@ choice=${choice##* }
 
 if [ -f "$HOME/$choice" ]; then
 	$TERMINAL -e $EDITOR "$HOME/$choice" 2>/dev/null
-	else
+else
 	$TERMINAL -e $EDITOR "$HOME/$choice"* 2>/dev/null
 fi

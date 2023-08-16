@@ -1,0 +1,1 @@
+$BROWSER --class='hidebars' -P hidebars --new-tab "https://discord.com/app"

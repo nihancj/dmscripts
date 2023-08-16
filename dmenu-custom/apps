@@ -1,11 +1,15 @@
 accent_color
+alacritty
+android-studio
 arandr
-asdasd
+bluetooth
 color_scheme
 config
+Discord
 dmenu_run
 emojis
 firefox
+firefox+
 fontpreview-ueberzug
 galculator
 geany
@@ -13,6 +17,7 @@ godot
 gparted
 htop
 idea
+Instagram
 kdeconnect-app
 Kindle
 kitty
@@ -22,6 +27,7 @@ mount-dm
 mpv
 nm-connection-editor
 nmtui
+notifyconf
 obconf
 onboard
 #pavucontrol
@@ -34,11 +40,14 @@ remap_keys
 screenshot
 st
 surf
+Telegram
 terminal
 thunar
+timeshift
 tint2conf
 umount-dm
 vim
+virt-manager
 virtualbox
 vlc
 wallpaper
