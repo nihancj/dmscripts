@@ -1,18 +1,20 @@
 #! /bin/sh
 
-choice=$(printf '%s\n' " Logout" " Shutdown" " Restart" " Suspend" " Hibernate"| dmenu -i -n -p 'Exit? ')
+choice=${1:-$(printf '%s\n' " Logout" " Shutdown" " Restart" " Sleep" " Hibernate"| dmenu -i -n -p 'Exit? ')}
 
+printf $choice
 # What to do when
 if [ "$choice" = " Logout" ];then
-        loginctl kill-session self
+		# dwm-msg run_command quit
+		loginctl kill-session self
 elif [ "$choice" = " Shutdown" ]; then
-        loginctl poweroff
+		loginctl poweroff
 elif [ "$choice" = " Restart" ];then
-        loginctl reboot
-elif [ "$choice" = " Sleep" ];then
-        loginctl suspend
+		loginctl reboot
+elif [ "$choice" = " Sleep" ];then
+		doas loginctl suspend
 elif [ "$choice" = " Hibernate" ];then
-        loginctl hibernate
+		loginctl hibernate
 else
     exit 1
 fi
