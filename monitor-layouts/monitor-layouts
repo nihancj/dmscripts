@@ -1,0 +1,15 @@
+#!/bin/sh
+
+NAME="monitor-layouts"
+SOURCE="$HOME/dmscripts/$NAME"
+
+choice="$(ls $SOURCE | grep -v $NAME | sed 's/\.sh//' | dmenu -i)"
+[ -z "$choice" ] && exit 1
+
+if [ -d $SOURCE/$choice ]; then
+	choice2="$(ls $SOURCE/$choice | grep -v $NAME | sed 's/\.sh//' | dmenu -i)"
+	[ -z "$choice2" ] && exit 1
+	choice="$choice/$choice2"
+fi
+
+exec "$SOURCE/$choice.sh"
